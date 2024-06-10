@@ -2,6 +2,7 @@ import json
 import tkinter as tk
 from tkinter import ttk
 from tkinter import colorchooser
+import os
 
 class HighlightingSettings(tk.Tk):
     def __init__(self, parent):
@@ -109,12 +110,16 @@ class HighlightingSettings(tk.Tk):
         self.destroy()
 
     def save_mappings(self):
-        with open("highlighting_settings.json", "w") as file:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_dir, 'highlighting_settings.json')
+        with open(file_path, "w") as file:
             json.dump(self.color_mapping, file)
 
     def load_color_mapping(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_dir, 'highlighting_settings.json')
         try:
-            with open("highlighting_settings.json", "r") as file:
+            with open(file_path, "r") as file:
                 self.color_mapping = json.load(file)
         except FileNotFoundError:
             self.color_mapping = {}

@@ -6,7 +6,6 @@ import json
 import tkinter.messagebox
 import os
 
-
 def save_files():
     file_data = []
     for item in files_tree.get_children():
@@ -26,13 +25,17 @@ def save_files():
             value = value.replace('Год', 'Year')
             value = value.replace('час', 'hour')
         file_data.append({"file": values[0], "rotation": value})
-    with open("files.json", "w") as file:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'files.json')
+    with open(file_path, "w") as file:
         json.dump(file_data, file)
 
 def load_files():
     files_tree.delete(*files_tree.get_children())
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'files.json')
     try:
-        with open("files.json", "r") as file:
+        with open(file_path, "r") as file:
             file_data = json.load(file)
             for data in file_data:
                 if "off" in data["rotation"]:
@@ -56,14 +59,18 @@ def load_files():
 
 # Функция для сохранения настроек в файл JSON
 def save_settings(udp_settings, tcp_settings):
-    with open("server_settings.json", "w") as f:
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'server_settings.json')
+    with open(file_path, "w") as f:
         print(udp_settings, tcp_settings)
         json.dump({"UDP": udp_settings, "TCP": tcp_settings}, f)
 
 # Функция для загрузки настроек из файла JSON
 def load_settings():
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    file_path = os.path.join(current_dir, 'server_settings.json')
     try:
-        with open("server_settings.json", "r") as f:
+        with open(file_path, "r") as f:
             settings = json.load(f)
             return settings.get("UDP", {}), settings.get("TCP", {})
     except FileNotFoundError:
@@ -108,7 +115,7 @@ def browse_file():
 def add_file():
     filename = file_entry.get()
     rotation = get_rotation_value()
-    files_tree.insert("", "end", values=(os.path.basename(filename), rotation))
+    files_tree.insert("", "end", values=(filename, rotation))
 
 def delete_file():
     selected_item = files_tree.selection()
@@ -122,7 +129,6 @@ def cancel_click():
 def on_tab_change(event):
     selected_tab = event.widget.select()
     tab_text = event.widget.tab(selected_tab, "text")
-    print(tab_text)
     if tab_text == "Файлы":
         load_files()
 

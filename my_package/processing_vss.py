@@ -180,8 +180,10 @@ class HighlightingSettings(tk.Tk):
 
 
     def load_color_mapping(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_dir, 'processing.json')
         try:
-            with open("processing.json", "r") as file:
+            with open(file_path, "r") as file:
                 self.color_mapping = json.load(file)
                 self.update_color_table()
         except FileNotFoundError:
@@ -265,8 +267,9 @@ class HighlightingSettings(tk.Tk):
             action_str = " AND ".join(flags)
             facility_severity = f"{facility}_{severity}_{text_contains}" if facility and severity else facility or severity
             self.color_mapping[facility_severity] = action_str
-
-        with open("processing.json", "w") as file:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_dir, 'processing.json')
+        with open(file_path, "w") as file:
             json.dump(self.color_mapping, file, indent=4)
 
     def remove_selected_row(self):

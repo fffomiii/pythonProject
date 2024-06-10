@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import json
+import os
 
 class SyslogFilter(tk.Tk):
     def __init__(self, callback):
@@ -19,13 +20,16 @@ class SyslogFilter(tk.Tk):
             "facility_vars": [var.get() for var in self.facility_vars],
             "custom_text": self.custom_text_entry.get()
         }
-
-        with open("settings.json", "w") as f:
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_dir, 'settings.json')
+        with open(file_path, "w") as f:
             json.dump(settings, f)
 
     def load_settings(self):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_dir, 'settings.json')
         try:
-            with open("settings.json", "r") as f:
+            with open(file_path, "r") as f:
                 settings = json.load(f)
 
                 for var, value in zip(self.priority_vars, settings["priority_vars"]):

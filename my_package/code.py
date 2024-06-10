@@ -10,10 +10,7 @@ from watchdog.observers import Observer
 import json
 import sys
 import os
-from time import time
 from datetime import datetime, timedelta
-from sympy.logic.boolalg import Or,And,Not
-from sympy.abc import symbols
 from tkinter import messagebox
 
 
@@ -220,7 +217,12 @@ class SyslogServer(tk.Tk):
         self.rev = False
         self.sort_order = {col: False for col in self.log_tree["columns"]}
         self.server_settings_observer = Observer()
-        self.server_settings_observer.schedule(ServerSettingsHandler(), path="server_settings.json", recursive=False)
+        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        settings_path = os.path.join(self.current_dir, "server_settings.json")
+
+        # Теперь используем абсолютный путь при настройке наблюдателя
+        self.server_settings_observer.schedule(ServerSettingsHandler(), path=settings_path, recursive=False)
+#        self.server_settings_observer.schedule(ServerSettingsHandler(), path="server_settings.json", recursive=False)
         self.server_settings_observer.start()
 
         self.update_server_settings()
@@ -287,8 +289,11 @@ class SyslogServer(tk.Tk):
             self.sort_other(col, reverse)
 
     def load_files(self):
+        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+        # Путь к файлу, расположенному в той же папке
+        file_path = os.path.join(self.current_dir, 'files.json')
         try:
-            with open("files.json", "r") as file:
+            with open(file_path, "r") as file:
                 files_data = json.load(file)
                 if isinstance(files_data, list):
                     for item in files_data:
@@ -364,7 +369,9 @@ class SyslogServer(tk.Tk):
             "Informational": 6,
             "Debug": 7
         }
-        with open("highlighting_settings.json", "r") as file:
+        # Путь к файлу, расположенному в той же папке
+        file_path = os.path.join(self.current_dir, 'highlighting_settings.json')
+        with open(file_path, "r") as file:
             settings = json.load(file)
         for key, value in settings.items():
             f, s, g = key.split('_')
@@ -503,8 +510,9 @@ class SyslogServer(tk.Tk):
                 self.processing_thread.start()
 
                 rotation_settings = {}
+                file_path = os.path.join(self.current_dir, 'files.json')
                 try:
-                    with open("files.json", "r") as file:
+                    with open(file_path, "r") as file:
                         rotation_settings_list = json.load(file)
                         for item in rotation_settings_list:
                             file_name = item.get("file", "")
@@ -708,7 +716,8 @@ class SyslogServer(tk.Tk):
 
     # Функция для чтения файла settings.json и парсинга значений
     def parse_settings(self):
-        with open("settings.json", "r") as file:
+        file_path = os.path.join(self.current_dir, 'settings.json')
+        with open(file_path, "r") as file:
             settings = json.load(file)
             priority_values = [index for index, value in enumerate(settings["priority_vars"]) if value]
             facility_values = [index for index, value in enumerate(settings["facility_vars"]) if value]
@@ -890,7 +899,8 @@ class SyslogServer(tk.Tk):
             "Informational": 6,
             "Debug": 7
         }
-        with open("processing.json", "r") as file:
+        file_path = os.path.join(self.current_dir, 'processing.json')
+        with open(file_path, "r") as file:
             settings = json.load(file)
         for key, value in settings.items():
             f, s, g = key.split('_')
@@ -990,22 +1000,28 @@ class SyslogServer(tk.Tk):
             self.log_tree.delete(child)
 
     def setup_vss(self):
-        subprocess.run(["python", "setup_vss.py"])
+        file_path = os.path.join(self.current_dir, 'setup_vss.py')
+        subprocess.run(["python3", file_path])
 
     def processing_vss(self):
-        subprocess.run(["python", "processing_vss.py"])
+        file_path = os.path.join(self.current_dir, 'processing_vss.py')
+        subprocess.run(["python3", file_path])
 
     def highlighting_vss(self):
-        subprocess.run(["python", "highlighting_vss.py"])
+        file_path = os.path.join(self.current_dir, 'highlighting_vss.py')
+        subprocess.run(["python3", file_path])
 
     def open_filter_windows(callback):
-        subprocess.run(["python", "filter.py"])
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_dir, 'filter.py')
+        subprocess.run(["python3", file_path])
 
     def update_highlighting_settings(self, settings):
         print("Update Highlighting Settings", settings)
     def update_server_settings(self):
         try:
-            with open("server_settings.json", "r") as f:
+            file_path = os.path.join(self.current_dir, 'server_settings.json')
+            with open(file_path, "r") as f:
                 settings = json.load(f)
                 self.udp_enabled = settings.get("UDP", {}).get("enabled", False)
                 self.tcp_enabled = settings.get("TCP", {}).get("enabled", False)
@@ -1035,8 +1051,10 @@ class HighlightingSettingsHandler(FileSystemEventHandler):
         self.app = app
 
     def on_modified(self, event):
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        file_path = os.path.join(current_dir, 'highlighting_settings.json')
         if event.src_path == "highlighting_settings.json":
-            with open(event.src_path, "r") as file:
+            with open(file_path, "r") as file:
                 settings = json.load(file)
                 self.app.update_highlighting_settings(settings)
 
