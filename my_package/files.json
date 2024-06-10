@@ -1,0 +1,1 @@
+[{"file": "syslog_4.json", "rotation": "off"}, {"file": "syslog_1.json", "rotation": "off"}, {"file": "syslog_2.json", "rotation": "off"}, {"file": "syslog_3.json", "rotation": "off"}]
