@@ -12,7 +12,8 @@ import sys
 import os
 from datetime import datetime, timedelta
 from tkinter import messagebox
-
+import importlib.resources as pkg_resources
+#import appdirs
 
 class TCPSyslogHandler(socketserver.BaseRequestHandler):
     def __init__(self, request, client_address, server, log_queue):
@@ -217,11 +218,15 @@ class SyslogServer(tk.Tk):
         self.rev = False
         self.sort_order = {col: False for col in self.log_tree["columns"]}
         self.server_settings_observer = Observer()
-        self.current_dir = os.path.dirname(os.path.abspath(__file__))
-        settings_path = os.path.join(self.current_dir, "server_settings.json")
 
-        # Теперь используем абсолютный путь при настройке наблюдателя
-        self.server_settings_observer.schedule(ServerSettingsHandler(), path=settings_path, recursive=False)
+#        self.settings_dir = appdirs.user_data_dir("f0ma")
+
+
+#        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+#        settings_path = os.path.join(self.current_dir, "server_settings.json")
+#        self.server_settings_observer.schedule(ServerSettingsHandler(), path=settings_path, recursive=False)
+        self.server_settings_observer.schedule(ServerSettingsHandler(), path="/home/foma/PycharmProjects/pythonProject/my_package/server_settings.json", recursive=False)
+
 #        self.server_settings_observer.schedule(ServerSettingsHandler(), path="server_settings.json", recursive=False)
         self.server_settings_observer.start()
 
@@ -289,11 +294,11 @@ class SyslogServer(tk.Tk):
             self.sort_other(col, reverse)
 
     def load_files(self):
-        self.current_dir = os.path.dirname(os.path.abspath(__file__))
+#        self.current_dir = os.path.dirname(os.path.abspath(__file__))
         # Путь к файлу, расположенному в той же папке
-        file_path = os.path.join(self.current_dir, 'files.json')
+#        file_path = os.path.join(self.current_dir, 'files.json')
         try:
-            with open(file_path, "r") as file:
+            with open("/home/foma/PycharmProjects/pythonProject/my_package/files.json", "r") as file:
                 files_data = json.load(file)
                 if isinstance(files_data, list):
                     for item in files_data:
@@ -369,9 +374,7 @@ class SyslogServer(tk.Tk):
             "Informational": 6,
             "Debug": 7
         }
-        # Путь к файлу, расположенному в той же папке
-        file_path = os.path.join(self.current_dir, 'highlighting_settings.json')
-        with open(file_path, "r") as file:
+        with open("/home/foma/PycharmProjects/pythonProject/my_package/highlighting_settings.json", "r") as file:
             settings = json.load(file)
         for key, value in settings.items():
             f, s, g = key.split('_')
@@ -510,9 +513,8 @@ class SyslogServer(tk.Tk):
                 self.processing_thread.start()
 
                 rotation_settings = {}
-                file_path = os.path.join(self.current_dir, 'files.json')
                 try:
-                    with open(file_path, "r") as file:
+                    with open("/home/foma/PycharmProjects/pythonProject/my_package/files.json", "r") as file:
                         rotation_settings_list = json.load(file)
                         for item in rotation_settings_list:
                             file_name = item.get("file", "")
@@ -716,8 +718,7 @@ class SyslogServer(tk.Tk):
 
     # Функция для чтения файла settings.json и парсинга значений
     def parse_settings(self):
-        file_path = os.path.join(self.current_dir, 'settings.json')
-        with open(file_path, "r") as file:
+        with open("/home/foma/PycharmProjects/pythonProject/my_package/settings.json", "r") as file:
             settings = json.load(file)
             priority_values = [index for index, value in enumerate(settings["priority_vars"]) if value]
             facility_values = [index for index, value in enumerate(settings["facility_vars"]) if value]
@@ -899,8 +900,7 @@ class SyslogServer(tk.Tk):
             "Informational": 6,
             "Debug": 7
         }
-        file_path = os.path.join(self.current_dir, 'processing.json')
-        with open(file_path, "r") as file:
+        with open("/home/foma/PycharmProjects/pythonProject/my_package/processing.json", "r") as file:
             settings = json.load(file)
         for key, value in settings.items():
             f, s, g = key.split('_')
@@ -1000,28 +1000,22 @@ class SyslogServer(tk.Tk):
             self.log_tree.delete(child)
 
     def setup_vss(self):
-        file_path = os.path.join(self.current_dir, 'setup_vss.py')
-        subprocess.run(["python3", file_path])
+        subprocess.run(["/usr/bin/python3", "/home/foma/PycharmProjects/pythonProject/my_package/setup_vss.py"])
 
     def processing_vss(self):
-        file_path = os.path.join(self.current_dir, 'processing_vss.py')
-        subprocess.run(["python3", file_path])
+        subprocess.run(["/usr/bin/python3", "/home/foma/PycharmProjects/pythonProject/my_package/processing_vss.py"])
 
     def highlighting_vss(self):
-        file_path = os.path.join(self.current_dir, 'highlighting_vss.py')
-        subprocess.run(["python3", file_path])
+        subprocess.run(["/usr/bin/python3", "/home/foma/PycharmProjects/pythonProject/my_package/highlighting_vss.py"])
 
     def open_filter_windows(callback):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(current_dir, 'filter.py')
-        subprocess.run(["python3", file_path])
+        subprocess.run(["/usr/bin/python3", "/home/foma/PycharmProjects/pythonProject/my_package/filter.py"])
 
     def update_highlighting_settings(self, settings):
         print("Update Highlighting Settings", settings)
     def update_server_settings(self):
         try:
-            file_path = os.path.join(self.current_dir, 'server_settings.json')
-            with open(file_path, "r") as f:
+            with open("/home/foma/PycharmProjects/pythonProject/my_package/server_settings.json", "r") as f:
                 settings = json.load(f)
                 self.udp_enabled = settings.get("UDP", {}).get("enabled", False)
                 self.tcp_enabled = settings.get("TCP", {}).get("enabled", False)
@@ -1051,10 +1045,8 @@ class HighlightingSettingsHandler(FileSystemEventHandler):
         self.app = app
 
     def on_modified(self, event):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        file_path = os.path.join(current_dir, 'highlighting_settings.json')
         if event.src_path == "highlighting_settings.json":
-            with open(file_path, "r") as file:
+            with open("/home/foma/PycharmProjects/pythonProject/my_package/highlighting_settings.json", "r") as file:
                 settings = json.load(file)
                 self.app.update_highlighting_settings(settings)
 

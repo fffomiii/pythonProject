@@ -25,17 +25,13 @@ def save_files():
             value = value.replace('Год', 'Year')
             value = value.replace('час', 'hour')
         file_data.append({"file": values[0], "rotation": value})
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'files.json')
-    with open(file_path, "w") as file:
+    with open("/home/foma/PycharmProjects/pythonProject/my_package/files.json", "w") as file:
         json.dump(file_data, file)
 
 def load_files():
     files_tree.delete(*files_tree.get_children())
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'files.json')
     try:
-        with open(file_path, "r") as file:
+        with open("/home/foma/PycharmProjects/pythonProject/my_package/files.json", "r") as file:
             file_data = json.load(file)
             for data in file_data:
                 if "off" in data["rotation"]:
@@ -59,18 +55,14 @@ def load_files():
 
 # Функция для сохранения настроек в файл JSON
 def save_settings(udp_settings, tcp_settings):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'server_settings.json')
-    with open(file_path, "w") as f:
+    with open("/home/foma/PycharmProjects/pythonProject/my_package/server_settings.json", "w") as f:
         print(udp_settings, tcp_settings)
         json.dump({"UDP": udp_settings, "TCP": tcp_settings}, f)
 
 # Функция для загрузки настроек из файла JSON
 def load_settings():
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    file_path = os.path.join(current_dir, 'server_settings.json')
     try:
-        with open(file_path, "r") as f:
+        with open("/home/foma/PycharmProjects/pythonProject/my_package/server_settings.json", "r") as f:
             settings = json.load(f)
             return settings.get("UDP", {}), settings.get("TCP", {})
     except FileNotFoundError:
