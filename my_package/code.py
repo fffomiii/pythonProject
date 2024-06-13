@@ -228,7 +228,7 @@ class SyslogServer(tk.Tk):
 #        self.current_dir = os.path.dirname(os.path.abspath(__file__))
 #        settings_path = os.path.join(self.current_dir, "server_settings.json")
 #        self.server_settings_observer.schedule(ServerSettingsHandler(), path=settings_path, recursive=False)
-        self.server_settings_observer.schedule(ServerSettingsHandler(), path="server_settings.json", recursive=False)
+        self.server_settings_observer.schedule(ServerSettingsHandler(self), path="server_settings.json", recursive=False)
 
 #        self.server_settings_observer.schedule(ServerSettingsHandler(), path="server_settings.json", recursive=False)
         self.server_settings_observer.start()
@@ -1056,29 +1056,32 @@ class HighlightingSettingsHandler(FileSystemEventHandler):
 
 
 class ServerSettingsHandler(FileSystemEventHandler):
-    def on_modified(self, event, app=None):
-        if event.src_path == "server_settings.json":
-            app.update_server_settings()
-        if event.src_path == "files.json":
-            app.load_files()
 
-    def on_created(self, event, app=None):
+    def __init__(self,app):
+        self.app = app
+    def on_modified(self, event):
         if event.src_path == "server_settings.json":
-            app.update_server_settings()
+            self.app.update_server_settings()
         if event.src_path == "files.json":
-            app.load_files()
+            self.app.load_files()
 
-    def on_deleted(self, event, app=None):
+    def on_created(self, event):
         if event.src_path == "server_settings.json":
-            app.update_server_settings()
+            self.app.update_server_settings()
         if event.src_path == "files.json":
-            app.load_files()
+            self.app.load_files()
 
-    def on_moved(self, event, app=None):
+    def on_deleted(self, event):
         if event.src_path == "server_settings.json":
-            app.update_server_settings()
+            self.app.update_server_settings()
         if event.src_path == "files.json":
-            app.load_files()
+            self.app.load_files()
+
+    def on_moved(self, event):
+        if event.src_path == "server_settings.json":
+            self.app.update_server_settings()
+        if event.src_path == "files.json":
+            self.app.load_files()
 
 
 def main_entry():

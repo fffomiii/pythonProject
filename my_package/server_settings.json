@@ -1,1 +1,1 @@
-{"UDP": {"enabled": false, "ip_address": "0.0.0.0", "port": "1514"}, "TCP": {"enabled": true, "ip_address": "0.0.0.0", "port": "1515"}}
+{"UDP": {"enabled": true, "ip_address": "0.0.0.0", "port": "1514"}, "TCP": {"enabled": true, "ip_address": "0.0.0.0", "port": "1515"}}
