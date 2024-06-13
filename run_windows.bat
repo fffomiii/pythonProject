@@ -13,4 +13,4 @@ pip install -r requirements2.txt
 pip install pygame==2.5.2
 
 REM Run the main script
-python3 code.py
+python code.py
