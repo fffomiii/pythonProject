@@ -1,7 +1,6 @@
 from setuptools import setup, find_packages
 
-with open('requirements.txt') as f:
-    required = f.read().splitlines()
+
 
 setup(
     name='f0ma',
@@ -13,7 +12,16 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/fffomiii/pythonProject',
     packages=find_packages(),
-    install_requires=required,
+    install_requires=[
+        'appdirs==1.4.4',
+        'mpmath==1.3.0',
+        'pygame==2.5.2',
+        'pyparsing==3.1.1',
+        'sympy==1.12',
+        'systemd-python==235',
+        'tk==0.1.0',
+        'watchdog==3.0.0'
+    ],
     entry_points={
         'console_scripts': [
             'f0ma=my_package.code:main_entry',
