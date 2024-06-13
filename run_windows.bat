@@ -9,7 +9,8 @@ REM Activate virtual environment
 call venv\Scripts\activate
 
 REM Install required packages
-pip install -r requirements.txt
+pip install -r requirements2.txt
+pip install pygame==2.5.2
 
 REM Run the main script
 python3 code.py

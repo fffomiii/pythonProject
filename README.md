@@ -26,9 +26,21 @@
     ```
 ## Скриншоты
 
-### Main Interface
-![Main Interface](images/1.png)
+### Интерфейс "Визуального сервера системного журнала от f0ma"
+![Main Interface](images/1.jpg)
 
-### Another Screenshot
+### Окно настройки соединения
 ![Another Screenshot](images/2.jpg)
+
+### Окно настройки ротации
+![Main Interface](images/3.jpg)
+
+### Окно настройки цветового выделения
+![Another Screenshot](images/4.jpg)
+
+### Окно настройки реагирования
+![Main Interface](images/5.jpg)
+
+### Окно настройки фильтрации
+![Another Screenshot](images/6.jpg)
 

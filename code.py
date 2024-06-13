@@ -1004,16 +1004,16 @@ class SyslogServer(tk.Tk):
             self.log_tree.delete(child)
 
     def setup_vss(self):
-        subprocess.run(["python3", "setup_vss.py"])
+        subprocess.run(["python", "setup_vss.py"])
 
     def processing_vss(self):
-        subprocess.run(["python3", "processing_vss.py"])
+        subprocess.run(["python", "processing_vss.py"])
 
     def highlighting_vss(self):
-        subprocess.run(["python3", "highlighting_vss.py"])
+        subprocess.run(["python", "highlighting_vss.py"])
 
     def open_filter_windows(callback):
-        subprocess.run(["python3", "filter.py"])
+        subprocess.run(["python", "filter.py"])
 
     def update_highlighting_settings(self, settings):
         print("Update Highlighting Settings", settings)
