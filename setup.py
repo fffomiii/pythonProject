@@ -4,7 +4,7 @@ with open('requirements.txt') as f:
     required = f.read().splitlines()
 
 setup(
-    name='my_package',
+    name='f0ma',
     version='0.1',
     author='f0ma',
     author_email='fomaximenkov@gmail.com',
@@ -16,7 +16,7 @@ setup(
     install_requires=required,
     entry_points={
         'console_scripts': [
-            'f0ma=my_package.code:main',
+            'f0ma=my_package.code:main_entry',
         ],
     },
     classifiers=[

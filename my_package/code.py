@@ -13,7 +13,7 @@ import os
 from datetime import datetime, timedelta
 from tkinter import messagebox
 import importlib.resources as pkg_resources
-#import appdirs
+import appdirs
 
 class TCPSyslogHandler(socketserver.BaseRequestHandler):
     def __init__(self, request, client_address, server, log_queue):
@@ -104,6 +104,9 @@ class UDPSyslogHandler(socketserver.BaseRequestHandler):
             }
         else:
             return None
+
+
+
 
 class SyslogServer(tk.Tk):
     def __init__(self):
@@ -225,7 +228,7 @@ class SyslogServer(tk.Tk):
 #        self.current_dir = os.path.dirname(os.path.abspath(__file__))
 #        settings_path = os.path.join(self.current_dir, "server_settings.json")
 #        self.server_settings_observer.schedule(ServerSettingsHandler(), path=settings_path, recursive=False)
-        self.server_settings_observer.schedule(ServerSettingsHandler(), path="/home/foma/PycharmProjects/pythonProject/my_package/server_settings.json", recursive=False)
+        self.server_settings_observer.schedule(ServerSettingsHandler(), path="server_settings.json", recursive=False)
 
 #        self.server_settings_observer.schedule(ServerSettingsHandler(), path="server_settings.json", recursive=False)
         self.server_settings_observer.start()
@@ -235,6 +238,7 @@ class SyslogServer(tk.Tk):
         self.start_file_watcher()
         self.toggle_display_real_time_button.state(['selected'])
         self.toggle_display_mode()
+
 
     def sort_priority(self, reverse=False):
         data = [(int(self.log_tree.set(child, "Приоритет")), child) for child in self.log_tree.get_children('')]
@@ -298,7 +302,7 @@ class SyslogServer(tk.Tk):
         # Путь к файлу, расположенному в той же папке
 #        file_path = os.path.join(self.current_dir, 'files.json')
         try:
-            with open("/home/foma/PycharmProjects/pythonProject/my_package/files.json", "r") as file:
+            with open("files.json", "r") as file:
                 files_data = json.load(file)
                 if isinstance(files_data, list):
                     for item in files_data:
@@ -374,7 +378,7 @@ class SyslogServer(tk.Tk):
             "Informational": 6,
             "Debug": 7
         }
-        with open("/home/foma/PycharmProjects/pythonProject/my_package/highlighting_settings.json", "r") as file:
+        with open("highlighting_settings.json", "r") as file:
             settings = json.load(file)
         for key, value in settings.items():
             f, s, g = key.split('_')
@@ -514,7 +518,7 @@ class SyslogServer(tk.Tk):
 
                 rotation_settings = {}
                 try:
-                    with open("/home/foma/PycharmProjects/pythonProject/my_package/files.json", "r") as file:
+                    with open("files.json", "r") as file:
                         rotation_settings_list = json.load(file)
                         for item in rotation_settings_list:
                             file_name = item.get("file", "")
@@ -718,7 +722,7 @@ class SyslogServer(tk.Tk):
 
     # Функция для чтения файла settings.json и парсинга значений
     def parse_settings(self):
-        with open("/home/foma/PycharmProjects/pythonProject/my_package/settings.json", "r") as file:
+        with open("settings.json", "r") as file:
             settings = json.load(file)
             priority_values = [index for index, value in enumerate(settings["priority_vars"]) if value]
             facility_values = [index for index, value in enumerate(settings["facility_vars"]) if value]
@@ -900,7 +904,7 @@ class SyslogServer(tk.Tk):
             "Informational": 6,
             "Debug": 7
         }
-        with open("/home/foma/PycharmProjects/pythonProject/my_package/processing.json", "r") as file:
+        with open("processing.json", "r") as file:
             settings = json.load(file)
         for key, value in settings.items():
             f, s, g = key.split('_')
@@ -1000,22 +1004,22 @@ class SyslogServer(tk.Tk):
             self.log_tree.delete(child)
 
     def setup_vss(self):
-        subprocess.run(["/usr/bin/python3", "/home/foma/PycharmProjects/pythonProject/my_package/setup_vss.py"])
+        subprocess.run(["python3", "setup_vss.py"])
 
     def processing_vss(self):
-        subprocess.run(["/usr/bin/python3", "/home/foma/PycharmProjects/pythonProject/my_package/processing_vss.py"])
+        subprocess.run(["python3", "processing_vss.py"])
 
     def highlighting_vss(self):
-        subprocess.run(["/usr/bin/python3", "/home/foma/PycharmProjects/pythonProject/my_package/highlighting_vss.py"])
+        subprocess.run(["python3", "highlighting_vss.py"])
 
     def open_filter_windows(callback):
-        subprocess.run(["/usr/bin/python3", "/home/foma/PycharmProjects/pythonProject/my_package/filter.py"])
+        subprocess.run(["python3", "filter.py"])
 
     def update_highlighting_settings(self, settings):
         print("Update Highlighting Settings", settings)
     def update_server_settings(self):
         try:
-            with open("/home/foma/PycharmProjects/pythonProject/my_package/server_settings.json", "r") as f:
+            with open("server_settings.json", "r") as f:
                 settings = json.load(f)
                 self.udp_enabled = settings.get("UDP", {}).get("enabled", False)
                 self.tcp_enabled = settings.get("TCP", {}).get("enabled", False)
@@ -1046,37 +1050,40 @@ class HighlightingSettingsHandler(FileSystemEventHandler):
 
     def on_modified(self, event):
         if event.src_path == "highlighting_settings.json":
-            with open("/home/foma/PycharmProjects/pythonProject/my_package/highlighting_settings.json", "r") as file:
+            with open("highlighting_settings.json", "r") as file:
                 settings = json.load(file)
                 self.app.update_highlighting_settings(settings)
 
 
 class ServerSettingsHandler(FileSystemEventHandler):
-    def on_modified(self, event):
+    def on_modified(self, event, app=None):
         if event.src_path == "server_settings.json":
             app.update_server_settings()
         if event.src_path == "files.json":
             app.load_files()
 
-    def on_created(self, event):
+    def on_created(self, event, app=None):
         if event.src_path == "server_settings.json":
             app.update_server_settings()
         if event.src_path == "files.json":
             app.load_files()
 
-    def on_deleted(self, event):
+    def on_deleted(self, event, app=None):
         if event.src_path == "server_settings.json":
             app.update_server_settings()
         if event.src_path == "files.json":
             app.load_files()
 
-    def on_moved(self, event):
+    def on_moved(self, event, app=None):
         if event.src_path == "server_settings.json":
             app.update_server_settings()
         if event.src_path == "files.json":
             app.load_files()
 
 
-if __name__ == "__main__":
+def main_entry():
     app = SyslogServer()
     app.mainloop()
+
+if __name__ == "__main__":
+    main_entry()

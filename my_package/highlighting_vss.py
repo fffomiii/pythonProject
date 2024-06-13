@@ -110,12 +110,12 @@ class HighlightingSettings(tk.Tk):
         self.destroy()
 
     def save_mappings(self):
-        with open("/home/foma/PycharmProjects/pythonProject/my_package/highlighting_settings.json", "w") as file:
+        with open("highlighting_settings.json", "w") as file:
             json.dump(self.color_mapping, file)
 
     def load_color_mapping(self):
         try:
-            with open("/home/foma/PycharmProjects/pythonProject/my_package/highlighting_settings.json", "r") as file:
+            with open("highlighting_settings.json", "r") as file:
                 self.color_mapping = json.load(file)
         except FileNotFoundError:
             self.color_mapping = {}

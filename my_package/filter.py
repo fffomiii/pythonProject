@@ -20,12 +20,12 @@ class SyslogFilter(tk.Tk):
             "facility_vars": [var.get() for var in self.facility_vars],
             "custom_text": self.custom_text_entry.get()
         }
-        with open("/home/foma/PycharmProjects/pythonProject/my_package/settings.json", "w") as f:
+        with open("settings.json", "w") as f:
             json.dump(settings, f)
 
     def load_settings(self):
         try:
-            with open("/home/foma/PycharmProjects/pythonProject/my_package/settings.json", "r") as f:
+            with open("settings.json", "r") as f:
                 settings = json.load(f)
 
                 for var, value in zip(self.priority_vars, settings["priority_vars"]):
