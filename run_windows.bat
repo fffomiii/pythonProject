@@ -12,4 +12,4 @@ REM Install required packages
 pip install -r requirements.txt
 
 REM Run the main script
-python code.py
+python3 code.py

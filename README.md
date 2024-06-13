@@ -24,6 +24,11 @@
    ```bash
     ./run_unix.sh
     ```
+## Скриншоты
 
+### Main Interface
+![Main Interface](images/1.png)
 
+### Another Screenshot
+![Another Screenshot](images/2.jpg)
 
