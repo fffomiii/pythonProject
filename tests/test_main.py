@@ -1,5 +1,5 @@
 import unittest
-from my_package.code import TCPSyslogHandler  # замените на реальную функцию, которую хотите тестировать
+from code import TCPSyslogHandler  # замените на реальную функцию, которую хотите тестировать
 
 
 class TestMainFunction(unittest.TestCase):

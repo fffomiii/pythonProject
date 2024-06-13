@@ -24,7 +24,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'f0ma=my_package.code:main_entry',
+            'f0ma=code:main_entry',
         ],
     },
     classifiers=[
